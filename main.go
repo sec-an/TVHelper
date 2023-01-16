@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	//gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	routers.LoadDouBan(r)
 	routers.LoadConfig(r)

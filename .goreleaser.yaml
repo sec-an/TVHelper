@@ -25,7 +25,11 @@ builds:
       - mips64le
 
 archives:
-  - format: tar.gz
+  - files:
+      - config/*
+      - live/*
+      - source_config/*
+    format: tar.gz
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
       {{ .ProjectName }}_

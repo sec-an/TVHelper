@@ -14,6 +14,6 @@
 - ...
 
 ## 配置示例
-[配置样例](https://github.com/sec-an/TVHelper/config/sample.json)
+[配置样例](https://github.com/sec-an/TVHelper/blob/main/config/sample.json)
 
-[无注释模板](https://github.com/sec-an/TVHelper/config/default.json)
+[无注释模板](https://github.com/sec-an/TVHelper/blob/main/config/default.json)

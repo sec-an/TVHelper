@@ -1,0 +1,26 @@
+// 请自行新建配置，本配置仅供参考，请勿修改，后期更新可能会覆盖！
+// 请自行新建配置，本配置仅供参考，请勿修改，后期更新可能会覆盖！
+// 请自行新建配置，本配置仅供参考，请勿修改，后期更新可能会覆盖！
+
+// 最终配置地址为：http://你的ip:16214/config/文件名
+// 本配置的地址为：http://你的ip:16214/config/default
+// 当前程序提供的豆瓣主页在：http://你的ip:16214/home?douban=你的豆瓣id
+// 当前程序提供的直播文件服务器为：http://你的ip:16214/live/文件名.后缀
+// 若订阅地址为本地文件，请在source_config目录下新建目录并放置在新建目录中
+// 本地订阅：http://你的ip:16214/config/src/新建的文件夹名/文件名.后缀
+
+{
+  "subscribe": [{
+      "url": "https://hutool.ml/tang",
+      "multi-jar": false
+  }],
+  "lives": [],
+  "sites-blacklist": [],
+  "sites-prepend": [],
+  "sites-append": [],
+  "spider": "",
+  "wallpaper": "",
+  "mix-flags": [],
+  "mix-parses": [],
+  "mix-ads": []
+}

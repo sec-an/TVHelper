@@ -197,3 +197,6 @@ curl -fsSL "https://gh-proxy.com/https://raw.githubusercontent.com/sec-an/TVHelp
   "mix-ads": []
 }
 ```
+
+## 优先适配:thumbsup:
+[:tv: FongMi / TV](https://github.com/FongMi/TV)

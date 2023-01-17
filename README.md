@@ -48,8 +48,45 @@ curl -fsSL "https://gh-proxy.com/https://raw.githubusercontent.com/sec-an/TVHelp
 - 状态：`systemctl status TVHelper`
 - 重启：`systemctl restart TVHelper`
 
-## Docker
-待更新
+## 手动安装
+### 获取TVHelper
+打开[TVHelper Release](https://github.com/sec-an/TVHelper/releases)下载待部署系统对应的文件。
+### 运行
+```shell
+# 解压下载的文件，得到可执行文件：
+tar -zxvf TVHelper_*.tar.gz
+# 授予程序执行权限：
+chmod +x TVHelper
+# 运行程序
+./TVHelper
+```
+### 守护进程（Linux）
+使用任意方式编辑`/usr/lib/systemd/system/TVHelper.service`并添加如下内容，其中`path_TVHelper`为`TVHelper`所在的路径
+```bash
+[Unit]
+Description=TVHelper service
+Wants=network.target
+After=network.target network.service
+ 
+[Service]
+Type=simple
+WorkingDirectory=path_TVHelper
+ExecStart=path_TVHelper/TVHelper
+KillMode=process
+Restart=always
+ 
+[Install]
+WantedBy=multi-user.target
+```
+然后，执行`systemctl daemon-reload`重载配置，现在你可以使用这些命令来管理程序：
+- 启动：`systemctl start TVHelper`
+- 关闭：`systemctl stop TVHelper`
+- 配置开机自启：`systemctl enable TVHelper`
+- 取消开机自启：`systemctl disable TVHelper`
+- 状态：`systemctl status TVHelper`
+- 重启：`systemctl restart TVHelper`
+## 如何更新
+在[TVHelper Release](https://github.com/sec-an/TVHelper/releases)下载新版TVHelper，替换之前的版本即可。
 
 ## 配置示例
 [无注释模板](https://github.com/sec-an/TVHelper/blob/main/config/default.json)

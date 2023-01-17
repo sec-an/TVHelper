@@ -115,6 +115,7 @@ Type=simple
 WorkingDirectory=$INSTALL_PATH
 ExecStart=$INSTALL_PATH/TVHelper
 KillMode=process
+Restart=always
 
 [Install]
 WantedBy=multi-user.target

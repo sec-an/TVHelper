@@ -33,7 +33,9 @@ func (l *Live) UnmarshalJSON(data []byte) error {
 	}{
 		TempLive: (*TempLive)(l),
 	}
-	_ = json.Unmarshal(data, &lr)
+	if err := json.Unmarshal(data, &lr); err != nil {
+		return err
+	}
 	l.Type = cast.ToInt(lr.Type)
 	l.PlayerType = cast.ToInt(lr.PlayerType)
 	switch lr.Boot.(type) {
@@ -42,7 +44,7 @@ func (l *Live) UnmarshalJSON(data []byte) error {
 	case string:
 		boolValue, err := strconv.ParseBool(lr.Boot.(string))
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		l.Boot = boolValue
 	default:

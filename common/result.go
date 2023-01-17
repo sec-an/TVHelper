@@ -27,7 +27,9 @@ func (r *Result) UnmarshalJSON(data []byte) error {
 	}{
 		TempResult: (*TempResult)(r),
 	}
-	_ = json.Unmarshal(data, &rr)
+	if err := json.Unmarshal(data, &rr); err != nil {
+		return err
+	}
 	r.Page = cast.ToInt(rr.Page)
 	r.PageCount = cast.ToInt(rr.PageCount)
 	r.Limit = cast.ToInt(rr.Limit)

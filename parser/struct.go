@@ -38,14 +38,16 @@ func (s *Subscribe) UnmarshalJSON(data []byte) error {
 	}{
 		TempSubscribe: (*TempSubscribe)(s),
 	}
-	_ = json.Unmarshal(data, &sr)
+	if err := json.Unmarshal(data, &sr); err != nil {
+		return err
+	}
 	switch sr.MultiJar.(type) {
 	case bool:
 		s.MultiJar = sr.MultiJar.(bool)
 	case string:
 		boolValue, err := strconv.ParseBool(sr.MultiJar.(string))
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		s.MultiJar = boolValue
 	default:
@@ -60,7 +62,7 @@ func (s *Subscribe) UnmarshalJSON(data []byte) error {
 	case string:
 		boolValue, err := strconv.ParseBool(sr.AlwaysOn.(string))
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		s.AlwaysOn = boolValue
 	default:

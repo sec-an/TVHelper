@@ -2,21 +2,19 @@ package douban
 
 import (
 	"TVHelper/common"
-	"fmt"
+	"log"
 	"strings"
 
 	"github.com/tidwall/gjson"
 )
 
-func SubjectRealTimeHotest() (subjectRealTimeHotest []common.Vod) {
+func SubjectRealTimeHotest() (subjectRealTimeHotest []common.Vod, err error) {
 	subjectRealTimeHotest = make([]common.Vod, 0)
-
 	resp, err := dbClient.R().Get("/subject_collection/subject_real_time_hotest/items")
 	if err != nil {
-		fmt.Printf("[Error] - %v\n", err)
+		log.Println(err)
 		return
 	}
-
 	gjson.Get(resp.String(), "subject_collection_items").ForEach(func(_, v gjson.Result) bool {
 		rating := GJsonGetDefault(v.Get("rating.value"), v.Get("null_rating_reason"))
 		honorInfos := GJsonArrayToString(v.Get("honor_infos.#.title"), " | ")
@@ -28,6 +26,5 @@ func SubjectRealTimeHotest() (subjectRealTimeHotest []common.Vod) {
 		})
 		return true
 	})
-
 	return
 }

@@ -18,18 +18,23 @@ import (
 func getJson(url string) string {
 	key := ""
 	if strings.Contains(url, ";") {
-		urlSplit := strings.Split(url, ";")
-		key = urlSplit[2]
-		url = urlSplit[0]
+		if urlSplit := strings.Split(url, ";"); len(urlSplit) > 2 {
+			key = urlSplit[2]
+			url = urlSplit[0]
+		}
 	}
 	resp, err := parserClient.R().Get(url)
 	if err != nil {
-		//log.Fatal(err)
+		log.Println(err)
 		return ""
 	}
 	dataWithOutComment := JsonConfigReader.New(strings.NewReader(resp.String()))
 	buf := new(strings.Builder)
-	_, _ = io.Copy(buf, dataWithOutComment)
+	_, err = io.Copy(buf, dataWithOutComment)
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
 	data := buf.String()
 	if !gjson.Valid(data) {
 		if strings.Contains(data, "**") {
@@ -46,7 +51,11 @@ func getJson(url string) string {
 }
 
 func ecbDecrypt(data string, key string) string {
-	block, _ := aes.NewCipher(padEnd(key))
+	block, err := aes.NewCipher(padEnd(key))
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
 	ciphertext := decodeHex(data)
 	mode := NewECBDecrypter(block)
 	mode.CryptBlocks(ciphertext, ciphertext)
@@ -56,12 +65,16 @@ func ecbDecrypt(data string, key string) string {
 func cbcDecrypt(data string) string {
 	indexKey := strings.Index(data, "2324") + 4
 	key := string(decodeHex(data[:indexKey]))
-	key = strings.Replace(string(key), "$#", "", -1)
-	key = strings.Replace(string(key), "#$", "", -1)
+	key = strings.Replace(key, "$#", "", -1)
+	key = strings.Replace(key, "#$", "", -1)
 	indexIv := len(data) - 26
 	iv := decodeHex(strings.TrimSpace(data[indexIv:]))
 	ciphertext := decodeHex(strings.TrimSpace(data[indexKey:indexIv]))
-	block, _ := aes.NewCipher(padEnd(key))
+	block, err := aes.NewCipher(padEnd(key))
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
 	mode := cipher.NewCBCDecrypter(block, padEnd(string(iv)))
 	mode.CryptBlocks(ciphertext, ciphertext)
 	return string(pkcs5Trimming(ciphertext))
@@ -74,7 +87,7 @@ func base64ToString(data string) string {
 	}
 	decodeBytes, err := base64.StdEncoding.DecodeString(extracted)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	return string(decodeBytes)
 }
@@ -94,7 +107,7 @@ func padEnd(key string) []byte {
 func decodeHex(s string) []byte {
 	data, err := hex.DecodeString(strings.ToUpper(s))
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return []byte{}
 	}
 	return data
@@ -127,10 +140,12 @@ func (x *ECBDecrypter) BlockSize() int {
 }
 func (x *ECBDecrypter) CryptBlocks(dst, src []byte) {
 	if len(src)%x.blockSize != 0 {
-		panic("crypto/cipher: input not full blocks")
+		log.Println("crypto/cipher: input not full blocks")
+		return
 	}
 	if len(dst) < len(src) {
-		panic("crypto/cipher: output smaller than input")
+		log.Println("crypto/cipher: output smaller than input")
+		return
 	}
 	for len(src) > 0 {
 		x.b.Decrypt(dst, src[:x.blockSize])

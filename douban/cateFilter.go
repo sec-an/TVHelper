@@ -4,6 +4,7 @@ import (
 	"TVHelper/common"
 	"encoding/base64"
 	"encoding/json"
+	"log"
 	"math"
 	"strconv"
 	"strings"
@@ -15,19 +16,23 @@ import (
 
 var count = 30
 
-func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Result) {
+func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Result, err error) {
 	var resp *req.Response
-	extDecodeBytes, _ := base64.StdEncoding.DecodeString(ext)
-
-	curPage, _ := strconv.Atoi(pg)
-
+	extDecodeBytes, err := base64.StdEncoding.DecodeString(ext)
+	if err != nil {
+		log.Println(err)
+	}
+	curPage, err := strconv.Atoi(pg)
+	if err != nil {
+		log.Println(err)
+	}
 	switch cateType {
 	case "0interests":
 		status := GJsonGetDefault(gjson.GetBytes(extDecodeBytes, "status"), "mark")
 		subtypeTag := gjson.GetBytes(extDecodeBytes, "subtype_tag").String()
 		yearTag := GJsonGetDefault(gjson.GetBytes(extDecodeBytes, "year_tag"), "全部")
 		path := strings.Join([]string{"/user/", douban, "/interests"}, "")
-		resp, _ = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = dbClient.R().SetQueryParams(map[string]string{
 			"type":        "movie",
 			"status":      status,
 			"subtype_tag": subtypeTag,
@@ -38,7 +43,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 	case "1hot_gaia":
 		area := GJsonGetDefault(gjson.GetBytes(extDecodeBytes, "area"), "全部")
 		sort := GJsonGetDefault(gjson.GetBytes(extDecodeBytes, "sort"), "recommend")
-		resp, _ = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = dbClient.R().SetQueryParams(map[string]string{
 			"area":  area,
 			"sort":  sort,
 			"start": strconv.Itoa((curPage - 1) * count),
@@ -47,7 +52,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 	case "2tv_hot", "3show_hot":
 		sType := GJsonGetDefault(gjson.GetBytes(extDecodeBytes, "type"), cateType[1:])
 		path := strings.Join([]string{"/subject_collection/", sType, "/items"}, "")
-		resp, _ = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = dbClient.R().SetQueryParams(map[string]string{
 			"start": strconv.Itoa((curPage - 1) * count),
 			"count": strconv.Itoa(count),
 		}).Get(path)
@@ -57,7 +62,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 				"real_time_hotest"},
 				"_"))
 		path := strings.Join([]string{"/subject_collection/", id, "/items"}, "")
-		resp, _ = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = dbClient.R().SetQueryParams(map[string]string{
 			"start": strconv.Itoa((curPage - 1) * count),
 			"count": strconv.Itoa(count),
 		}).Get(path)
@@ -75,7 +80,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 		}
 		selectedCategoriesJson, _ := json.Marshal(selectedCategories)
 		path := strings.Join([]string{"/", cateType[1:], "/recommend"}, "")
-		resp, _ = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = dbClient.R().SetQueryParams(map[string]string{
 			"tags":                tags,
 			"sort":                sort,
 			"refresh":             "0",
@@ -84,9 +89,15 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 			"count":               strconv.Itoa(count),
 		}).Get(path)
 	}
+	if err != nil {
+		return
+	}
 
 	respStr := resp.String()
-	total, _ := strconv.Atoi(gjson.Get(respStr, "total").String())
+	total, err := strconv.Atoi(gjson.Get(respStr, "total").String())
+	if err != nil {
+		log.Println(err)
+	}
 
 	cateFilterResult = common.Result{
 		Page:      curPage,

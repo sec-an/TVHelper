@@ -33,7 +33,9 @@ func (s *Site) UnmarshalJSON(data []byte) error {
 	}{
 		TempSite: (*TempSite)(s),
 	}
-	_ = json.Unmarshal(data, &sr)
+	if err := json.Unmarshal(data, &sr); err != nil {
+		return err
+	}
 	s.Type = cast.ToInt(sr.Type)
 	s.PlayerType = cast.ToInt(sr.PlayerType)
 	s.Searchable = cast.ToInt(sr.Searchable)

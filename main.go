@@ -2,7 +2,7 @@ package main
 
 import (
 	"TVHelper/routers"
-	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,11 +10,11 @@ import (
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-	routers.LoadDouBan(r)
-	routers.LoadConfig(r)
-	routers.LoadLive(r)
+	routers.LoadDouBan(r) // 豆瓣主页
+	routers.LoadConfig(r) // 代理配置
+	routers.LoadLive(r)   // 直播文件
 
 	if err := r.Run(":16214"); err != nil {
-		fmt.Printf("startup service failed, err:%v\n\n", err)
+		log.Fatalf("startup service failed: %v\n\n", err)
 	}
 }

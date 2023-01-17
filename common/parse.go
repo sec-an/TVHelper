@@ -26,7 +26,9 @@ func (p *Parse) UnmarshalJSON(data []byte) error {
 	}{
 		TempParse: (*TempParse)(p),
 	}
-	_ = json.Unmarshal(data, &pr)
+	if err := json.Unmarshal(data, &pr); err != nil {
+		return err
+	}
 	p.Type = cast.ToInt(pr.Type)
 	return nil
 }

@@ -9,7 +9,7 @@ import (
 func LoadConfig(e *gin.Engine) {
 	conf := e.Group("/config")
 	{
-		conf.GET("/:id", parser.ConfigHandler)
+		conf.GET("/:filename", parser.ConfigHandler)
 		conf.GET("/src/:path/:file", func(c *gin.Context) {
 			path := c.Param("path")
 			file := c.Param("file")

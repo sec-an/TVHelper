@@ -3,11 +3,19 @@ Server:
   HttpPort: 16214     # 端口
   ReadTimeout: 30
   WriteTimeout: 30
+Redis:
+  Running: false
+  Host: 127.0.0.1
+  Port: 6379
+  Auth: ""
+  Database: 0
+  IdleTimeout: 5    # 秒
+  PoolSize: 100
 Log:
   Path: ./logs
   FilePrefix: tvh
-  Encoder: json
-  Output: file        # both/file/console
+  Encoder: json    # json/console
+  Output: file     # both/file/console
   LumberJack:
     MaxSize: 1        # 在进行切割之前，日志文件的最大大小（以MB为单位）
     MaxBackups: 30    # 保留旧文件的最大个数

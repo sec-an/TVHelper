@@ -87,12 +87,6 @@ func NewLogger(items []logItem) {
 	}
 
 	logger := zap.New(zapcore.NewTee(cores...), zap.AddCaller())
-	//defer func(logger *zap.Logger) {
-	//	err := logger.Sync()
-	//	if err != nil {
-	//		log.Println(err)
-	//	}
-	//}(logger)
 	global.Logger = logger
 }
 

@@ -6,7 +6,9 @@ import (
 	"TVHelper/internal/parser"
 	"TVHelper/internal/routers"
 	"TVHelper/pkg/logging"
+	"TVHelper/pkg/redis"
 	"TVHelper/pkg/setting"
+	"context"
 	"flag"
 	"log"
 	"net/http"
@@ -21,22 +23,37 @@ import (
 var dir string
 
 func init() {
-	// 切换工作目录
+	// 获取当前路径
 	currDir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
-	flag.StringVar(&dir, "d", currDir, "配置目录")
+	flag.StringVar(&dir, "d", currDir, "TVHelper根目录")
 	flag.Parse()
+	// 切换至TVHelper根目录
 	err = os.Chdir(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
+	// 配置初始化
 	err = setupSetting()
 	if err != nil {
 		log.Fatalf("init.setupSetting err: %v", err)
 	}
+	// zap初始化
 	logging.Init()
+	// redis初始化
+	if global.RedisSetting.Running {
+		global.RedisClient = redis.Init()
+		// 每次运行先清空缓存
+		ctx := context.Background()
+		res, err := global.RedisClient.FlushDB(ctx).Result()
+		if err != nil {
+			global.Logger.Panic("Failed to flush redis", zap.Error(err))
+		}
+		global.Logger.Info("FlushDB: " + res)
+	}
+	// 豆瓣、配置解析客户端初始化
 	global.DouBanClient = douban.NewReqClient(global.SpiderSetting.DouBanClientTimeout)
 	global.ParserClient = parser.NewReqClient(global.SpiderSetting.ParserClientTimeout)
 }
@@ -73,6 +90,10 @@ func setupSetting() error {
 	if err != nil {
 		return err
 	}
+	err = newSetting.ReadSection("Redis", &global.RedisSetting)
+	if err != nil {
+		return err
+	}
 	err = newSetting.ReadSection("Spider", &global.SpiderSetting)
 	if err != nil {
 		return err
@@ -80,6 +101,7 @@ func setupSetting() error {
 
 	global.ServerSetting.ReadTimeout *= time.Second
 	global.ServerSetting.WriteTimeout *= time.Second
+	global.RedisSetting.IdleTimeout *= time.Second
 	global.SpiderSetting.DouBanClientTimeout *= time.Millisecond
 	global.SpiderSetting.ParserClientTimeout *= time.Millisecond
 	return nil

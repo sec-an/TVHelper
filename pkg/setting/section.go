@@ -29,6 +29,16 @@ type SpiderSettingS struct {
 	ParserClientTimeout time.Duration
 }
 
+type RedisSettingS struct {
+	Running     bool
+	Host        string
+	Port        uint16
+	Auth        string
+	Database    int
+	IdleTimeout time.Duration
+	PoolSize    int
+}
+
 func (s *Setting) ReadSection(k string, v interface{}) error {
 	err := s.vp.UnmarshalKey(k, v)
 	if err != nil {

@@ -2,6 +2,8 @@ package main
 
 import (
 	"TVHelper/global"
+	"TVHelper/internal/douban"
+	"TVHelper/internal/parser"
 	"TVHelper/internal/routers"
 	"TVHelper/pkg/logging"
 	"TVHelper/pkg/setting"
@@ -34,6 +36,8 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	global.DouBanClient = douban.NewReqClient(global.SpiderSetting.DouBanClientTimeout)
+	global.ParserClient = parser.NewReqClient(global.SpiderSetting.ParserClientTimeout)
 }
 
 func main() {
@@ -68,8 +72,14 @@ func setupSetting() error {
 	if err != nil {
 		return err
 	}
+	err = newSetting.ReadSection("Spider", &global.SpiderSetting)
+	if err != nil {
+		return err
+	}
 
 	global.ServerSetting.ReadTimeout *= time.Second
 	global.ServerSetting.WriteTimeout *= time.Second
+	global.SpiderSetting.DouBanClientTimeout *= time.Millisecond
+	global.SpiderSetting.ParserClientTimeout *= time.Millisecond
 	return nil
 }

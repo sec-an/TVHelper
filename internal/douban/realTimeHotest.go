@@ -12,7 +12,7 @@ import (
 
 func SubjectRealTimeHotest() (subjectRealTimeHotest []common.Vod, err error) {
 	subjectRealTimeHotest = make([]common.Vod, 0)
-	resp, err := dbClient.R().Get("/subject_collection/subject_real_time_hotest/items")
+	resp, err := global.DouBanClient.R().Get("/subject_collection/subject_real_time_hotest/items")
 	if err != nil {
 		global.Logger.Error("豆瓣实时热门错误", zap.Error(err))
 		return

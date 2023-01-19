@@ -25,7 +25,7 @@ func getJson(url string) string {
 			url = urlSplit[0]
 		}
 	}
-	resp, err := parserClient.R().Get(url)
+	resp, err := global.ParserClient.R().Get(url)
 	if err != nil {
 		global.Logger.Error(url, zap.Error(err))
 		return ""

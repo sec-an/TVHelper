@@ -13,3 +13,6 @@ Log:
     MaxBackups: 30    # 保留旧文件的最大个数
     MaxAge: 7         # 保留旧文件的最大天数
     Compress: true    # 是否压缩/归档旧文件
+Spider:
+  DouBanClientTimeout: 5000 # 毫秒
+  ParserClientTimeout: 5000 # 毫秒

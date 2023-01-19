@@ -6,9 +6,7 @@ import (
 	"github.com/imroc/req/v3"
 )
 
-var dbClient = NewReqClient()
-
-func NewReqClient() *req.Client {
+func NewReqClient(timeout time.Duration) *req.Client {
 	return req.C().
 		//DevMode().
 		SetBaseURL("https://frodo.douban.com/api/v2").
@@ -20,5 +18,5 @@ func NewReqClient() *req.Client {
 				"501 NetType/WIFI MiniProgramEnv/Windows WindowsWechat",
 		}).
 		SetCommonQueryParam("apikey", "0ac44ae016490db2204ce0a042db2916").
-		SetTimeout(5 * time.Second)
+		SetTimeout(timeout)
 }

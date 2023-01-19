@@ -34,7 +34,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 		subtypeTag := gjson.GetBytes(extDecodeBytes, "subtype_tag").String()
 		yearTag := GJsonGetDefault(gjson.GetBytes(extDecodeBytes, "year_tag"), "全部")
 		path := strings.Join([]string{"/user/", douban, "/interests"}, "")
-		resp, err = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = global.DouBanClient.R().SetQueryParams(map[string]string{
 			"type":        "movie",
 			"status":      status,
 			"subtype_tag": subtypeTag,
@@ -45,7 +45,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 	case "1hot_gaia":
 		area := GJsonGetDefault(gjson.GetBytes(extDecodeBytes, "area"), "全部")
 		sort := GJsonGetDefault(gjson.GetBytes(extDecodeBytes, "sort"), "recommend")
-		resp, err = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = global.DouBanClient.R().SetQueryParams(map[string]string{
 			"area":  area,
 			"sort":  sort,
 			"start": strconv.Itoa((curPage - 1) * count),
@@ -54,7 +54,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 	case "2tv_hot", "3show_hot":
 		sType := GJsonGetDefault(gjson.GetBytes(extDecodeBytes, "type"), cateType[1:])
 		path := strings.Join([]string{"/subject_collection/", sType, "/items"}, "")
-		resp, err = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = global.DouBanClient.R().SetQueryParams(map[string]string{
 			"start": strconv.Itoa((curPage - 1) * count),
 			"count": strconv.Itoa(count),
 		}).Get(path)
@@ -64,7 +64,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 				"real_time_hotest"},
 				"_"))
 		path := strings.Join([]string{"/subject_collection/", id, "/items"}, "")
-		resp, err = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = global.DouBanClient.R().SetQueryParams(map[string]string{
 			"start": strconv.Itoa((curPage - 1) * count),
 			"count": strconv.Itoa(count),
 		}).Get(path)
@@ -82,7 +82,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 		}
 		selectedCategoriesJson, _ := json.Marshal(selectedCategories)
 		path := strings.Join([]string{"/", cateType[1:], "/recommend"}, "")
-		resp, err = dbClient.R().SetQueryParams(map[string]string{
+		resp, err = global.DouBanClient.R().SetQueryParams(map[string]string{
 			"tags":                tags,
 			"sort":                sort,
 			"refresh":             "0",

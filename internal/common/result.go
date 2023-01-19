@@ -1,9 +1,11 @@
 package common
 
 import (
+	"TVHelper/global"
 	"encoding/json"
 
 	"github.com/spf13/cast"
+	"go.uber.org/zap"
 )
 
 type Result struct {
@@ -28,7 +30,7 @@ func (r *Result) UnmarshalJSON(data []byte) error {
 		TempResult: (*TempResult)(r),
 	}
 	if err := json.Unmarshal(data, &rr); err != nil {
-		return err
+		global.Logger.Error(string(data), zap.Error(err))
 	}
 	r.Page = cast.ToInt(rr.Page)
 	r.PageCount = cast.ToInt(rr.PageCount)

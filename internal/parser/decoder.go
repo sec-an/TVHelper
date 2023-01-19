@@ -1,14 +1,16 @@
 package parser
 
 import (
+	"TVHelper/global"
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
 	"encoding/hex"
 	"io"
-	"log"
 	"regexp"
 	"strings"
+
+	"go.uber.org/zap"
 
 	"github.com/DisposaBoy/JsonConfigReader"
 
@@ -25,14 +27,14 @@ func getJson(url string) string {
 	}
 	resp, err := parserClient.R().Get(url)
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(url, zap.Error(err))
 		return ""
 	}
 	dataWithOutComment := JsonConfigReader.New(strings.NewReader(resp.String()))
 	buf := new(strings.Builder)
 	_, err = io.Copy(buf, dataWithOutComment)
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(url+":json注释处理出错", zap.Error(err))
 		return ""
 	}
 	data := buf.String()
@@ -53,7 +55,9 @@ func getJson(url string) string {
 func ecbDecrypt(data string, key string) string {
 	block, err := aes.NewCipher(padEnd(key))
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(key,
+			zap.String("data", data),
+			zap.Error(err))
 		return ""
 	}
 	ciphertext := decodeHex(data)
@@ -72,7 +76,9 @@ func cbcDecrypt(data string) string {
 	ciphertext := decodeHex(strings.TrimSpace(data[indexKey:indexIv]))
 	block, err := aes.NewCipher(padEnd(key))
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(key,
+			zap.String("data", data),
+			zap.Error(err))
 		return ""
 	}
 	mode := cipher.NewCBCDecrypter(block, padEnd(string(iv)))
@@ -87,7 +93,7 @@ func base64ToString(data string) string {
 	}
 	decodeBytes, err := base64.StdEncoding.DecodeString(extracted)
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(data, zap.Error(err))
 	}
 	return string(decodeBytes)
 }
@@ -107,7 +113,7 @@ func padEnd(key string) []byte {
 func decodeHex(s string) []byte {
 	data, err := hex.DecodeString(strings.ToUpper(s))
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(s, zap.Error(err))
 		return []byte{}
 	}
 	return data
@@ -140,11 +146,11 @@ func (x *ECBDecrypter) BlockSize() int {
 }
 func (x *ECBDecrypter) CryptBlocks(dst, src []byte) {
 	if len(src)%x.blockSize != 0 {
-		log.Println("crypto/cipher: input not full blocks")
+		global.Logger.Error("crypto/cipher: input not full blocks")
 		return
 	}
 	if len(dst) < len(src) {
-		log.Println("crypto/cipher: output smaller than input")
+		global.Logger.Error("crypto/cipher: output smaller than input")
 		return
 	}
 	for len(src) > 0 {

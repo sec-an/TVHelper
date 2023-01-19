@@ -1,13 +1,15 @@
 package douban
 
 import (
-	"TVHelper/common"
+	"TVHelper/global"
+	"TVHelper/internal/common"
 	"encoding/base64"
 	"encoding/json"
-	"log"
 	"math"
 	"strconv"
 	"strings"
+
+	"go.uber.org/zap"
 
 	"github.com/imroc/req/v3"
 
@@ -20,11 +22,11 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 	var resp *req.Response
 	extDecodeBytes, err := base64.StdEncoding.DecodeString(ext)
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(ext, zap.Error(err))
 	}
 	curPage, err := strconv.Atoi(pg)
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(pg, zap.Error(err))
 	}
 	switch cateType {
 	case "0interests":
@@ -96,7 +98,7 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 	respStr := resp.String()
 	total, err := strconv.Atoi(gjson.Get(respStr, "total").String())
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(respStr, zap.Error(err))
 	}
 
 	cateFilterResult = common.Result{

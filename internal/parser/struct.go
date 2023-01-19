@@ -1,10 +1,12 @@
 package parser
 
 import (
-	"TVHelper/common"
+	"TVHelper/global"
+	"TVHelper/internal/common"
 	"encoding/json"
-	"log"
 	"strconv"
+
+	"go.uber.org/zap"
 
 	"github.com/spf13/cast"
 )
@@ -39,7 +41,7 @@ func (s *Subscribe) UnmarshalJSON(data []byte) error {
 		TempSubscribe: (*TempSubscribe)(s),
 	}
 	if err := json.Unmarshal(data, &sr); err != nil {
-		return err
+		global.Logger.Error(string(data), zap.Error(err))
 	}
 	switch sr.MultiJar.(type) {
 	case bool:
@@ -47,7 +49,7 @@ func (s *Subscribe) UnmarshalJSON(data []byte) error {
 	case string:
 		boolValue, err := strconv.ParseBool(sr.MultiJar.(string))
 		if err != nil {
-			log.Println(err)
+			global.Logger.Error(sr.MultiJar.(string), zap.Error(err))
 		}
 		s.MultiJar = boolValue
 	default:
@@ -62,7 +64,7 @@ func (s *Subscribe) UnmarshalJSON(data []byte) error {
 	case string:
 		boolValue, err := strconv.ParseBool(sr.AlwaysOn.(string))
 		if err != nil {
-			log.Println(err)
+			global.Logger.Error(sr.AlwaysOn.(string), zap.Error(err))
 		}
 		s.AlwaysOn = boolValue
 	default:

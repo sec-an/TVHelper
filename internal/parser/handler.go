@@ -1,11 +1,13 @@
 package parser
 
 import (
-	"TVHelper/common"
+	"TVHelper/global"
+	"TVHelper/internal/common"
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
+
+	"go.uber.org/zap"
 
 	"github.com/DisposaBoy/JsonConfigReader"
 
@@ -16,9 +18,9 @@ func ConfigHandler(c *gin.Context) {
 	filename := c.Param("filename")
 
 	// 读取配置文件，保存着config目录下
-	configFile, err := os.Open("config/" + filename + ".json")
+	configFile, err := os.Open("configs/config/" + filename + ".json")
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(filename, zap.Error(err))
 		c.PureJSON(404, gin.H{
 			"error": fmt.Sprintf("%v", err),
 		})
@@ -27,7 +29,7 @@ func ConfigHandler(c *gin.Context) {
 	defer func(configFile *os.File) {
 		err := configFile.Close()
 		if err != nil {
-			log.Println(err)
+			global.Logger.Error(filename, zap.Error(err))
 		}
 	}(configFile)
 
@@ -36,7 +38,7 @@ func ConfigHandler(c *gin.Context) {
 	configWithOutComment := JsonConfigReader.New(configFile) // 过滤注释
 	err = json.NewDecoder(configWithOutComment).Decode(&parser)
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error(filename+":解析配置出错", zap.Error(err))
 		c.PureJSON(500, gin.H{
 			"error": fmt.Sprintf("%v", err),
 		})
@@ -54,7 +56,7 @@ func ConfigHandler(c *gin.Context) {
 			err = json.Unmarshal([]byte(data), tmpSubscribe)
 			if err != nil {
 				// 订阅失效，更换下一订阅
-				log.Println(itemSubscribe.Url, err)
+				global.Logger.Error(itemSubscribe.Url+":订阅失效", zap.Error(err))
 				continue
 			}
 			// 该订阅是否使用自定义jar

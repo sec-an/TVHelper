@@ -1,7 +1,7 @@
 package douban
 
 import (
-	"TVHelper/common"
+	"TVHelper/internal/common"
 	"encoding/json"
 )
 

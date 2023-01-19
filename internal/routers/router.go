@@ -1,16 +1,32 @@
 package routers
 
 import (
-	"TVHelper/common"
-	"TVHelper/douban"
+	"TVHelper/global"
+	"TVHelper/internal/common"
+	"TVHelper/internal/douban"
+	"TVHelper/internal/middleware/zaplog"
+	"TVHelper/internal/parser"
 	"fmt"
-	"log"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
-func LoadDouBan(e *gin.Engine) {
-	e.GET("/home", func(c *gin.Context) {
+func NewRouter() *gin.Engine {
+	r := gin.New()
+	r.Use(zaplog.GinLogger(global.Logger), zaplog.GinRecovery(global.Logger, true))
+
+	conf := r.Group("/config")
+	{
+		conf.GET("/:filename", parser.ConfigHandler)
+		conf.GET("/src/:path/:file", func(c *gin.Context) {
+			path := c.Param("path")
+			file := c.Param("file")
+			c.File("configs/source_config/" + path + "/" + file)
+		})
+	}
+
+	r.GET("/home", func(c *gin.Context) {
 		dbId := c.Query("douban")
 
 		// 屏蔽搜素和播放请求
@@ -24,7 +40,7 @@ func LoadDouBan(e *gin.Engine) {
 		// 分类筛选
 		if t, ext, pg := c.Query("t"), c.Query("ext"), c.Query("pg"); t != "" {
 			if res, err := douban.CateFilter(t, ext, pg, dbId); err != nil {
-				log.Println(err)
+				global.Logger.Error("豆瓣分类筛选", zap.Error(err))
 				c.PureJSON(502, gin.H{
 					"error": fmt.Sprintf("%v", err),
 				})
@@ -37,7 +53,7 @@ func LoadDouBan(e *gin.Engine) {
 		// 实时热门，返回首页数据
 		subjectRealTimeHotest, err := douban.SubjectRealTimeHotest()
 		if err != nil {
-			log.Println(err)
+			global.Logger.Error("subjectRealTimeHotest", zap.Error(err))
 		}
 		result := common.Result{
 			Class:   douban.GetDbClass(),
@@ -53,4 +69,11 @@ func LoadDouBan(e *gin.Engine) {
 
 		c.PureJSON(200, result)
 	})
+
+	r.GET("/live/:file", func(c *gin.Context) {
+		file := c.Param("file")
+		c.File("configs/live/" + file)
+	})
+
+	return r
 }

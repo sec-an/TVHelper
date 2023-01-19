@@ -1,9 +1,11 @@
 package common
 
 import (
+	"TVHelper/global"
 	"encoding/json"
-	"log"
 	"strconv"
+
+	"go.uber.org/zap"
 
 	"github.com/spf13/cast"
 )
@@ -34,7 +36,7 @@ func (l *Live) UnmarshalJSON(data []byte) error {
 		TempLive: (*TempLive)(l),
 	}
 	if err := json.Unmarshal(data, &lr); err != nil {
-		return err
+		global.Logger.Error(string(data), zap.Error(err))
 	}
 	l.Type = cast.ToInt(lr.Type)
 	l.PlayerType = cast.ToInt(lr.PlayerType)
@@ -44,7 +46,7 @@ func (l *Live) UnmarshalJSON(data []byte) error {
 	case string:
 		boolValue, err := strconv.ParseBool(lr.Boot.(string))
 		if err != nil {
-			log.Println(err)
+			global.Logger.Error(lr.Boot.(string), zap.Error(err))
 		}
 		l.Boot = boolValue
 	default:

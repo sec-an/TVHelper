@@ -132,7 +132,7 @@ SUCCESS() {
   echo "TVHelper 安装成功！"
   echo -e "\r\n访问地址：${GREEN_COLOR}http://YOUR_IP:16214/${RES}\r\n"
 
-  echo -e "请详细阅读：${GREEN_COLOR}$INSTALL_PATH/config/sample.json${RES}"
+  echo -e "请详细阅读：${GREEN_COLOR}$INSTALL_PATH/configs/config/sample.json${RES}"
   
   echo
   echo -e "查看状态：${GREEN_COLOR}systemctl status TVHelper${RES}"

@@ -3,7 +3,7 @@
 - 使用在线配置，不方便对配置进行个性化修改
 - 在线配置缓存至本地，担心更新不及时
 
-## 功能（详见`config/sample.json`）
+## 功能（详见`configs/config/sample.json`）
 - 极高的自定义程度
 - 多源整合、处理（在线缝合）
   - `http://你的IP:16214/config/sample`
@@ -89,9 +89,9 @@ WantedBy=multi-user.target
 在[TVHelper Release](https://github.com/sec-an/TVHelper/releases)下载新版TVHelper，替换之前的版本即可。
 
 ## 配置示例
-[无注释模板](https://github.com/sec-an/TVHelper/blob/main/config/default.json)
+[无注释模板](https://github.com/sec-an/TVHelper/blob/main/configs/config/default.json)
 
-[配置样例](https://github.com/sec-an/TVHelper/blob/main/config/sample.json)
+[配置样例](https://github.com/sec-an/TVHelper/blob/main/configs/config/sample.json)
 
 ```json5
 // 请自行新建配置，本配置仅供参考，请勿修改，后期更新可能会覆盖！

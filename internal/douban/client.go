@@ -10,7 +10,7 @@ var dbClient = NewReqClient()
 
 func NewReqClient() *req.Client {
 	return req.C().
-		//DevMode()
+		//DevMode().
 		SetBaseURL("https://frodo.douban.com/api/v2").
 		SetCommonHeaders(map[string]string{
 			"Referer":      "https://servicewechat.com/wx2f9b06c1de1ccfca/84/page-frame.html",

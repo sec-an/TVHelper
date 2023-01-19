@@ -1,9 +1,11 @@
 package common
 
 import (
+	"TVHelper/global"
 	"encoding/json"
 
 	"github.com/spf13/cast"
+	"go.uber.org/zap"
 )
 
 type Site struct {
@@ -34,7 +36,7 @@ func (s *Site) UnmarshalJSON(data []byte) error {
 		TempSite: (*TempSite)(s),
 	}
 	if err := json.Unmarshal(data, &sr); err != nil {
-		return err
+		global.Logger.Error(string(data), zap.Error(err))
 	}
 	s.Type = cast.ToInt(sr.Type)
 	s.PlayerType = cast.ToInt(sr.PlayerType)

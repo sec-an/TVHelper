@@ -1,9 +1,11 @@
 package douban
 
 import (
-	"TVHelper/common"
-	"log"
+	"TVHelper/global"
+	"TVHelper/internal/common"
 	"strings"
+
+	"go.uber.org/zap"
 
 	"github.com/tidwall/gjson"
 )
@@ -12,7 +14,7 @@ func SubjectRealTimeHotest() (subjectRealTimeHotest []common.Vod, err error) {
 	subjectRealTimeHotest = make([]common.Vod, 0)
 	resp, err := dbClient.R().Get("/subject_collection/subject_real_time_hotest/items")
 	if err != nil {
-		log.Println(err)
+		global.Logger.Error("豆瓣实时热门错误", zap.Error(err))
 		return
 	}
 	gjson.Get(resp.String(), "subject_collection_items").ForEach(func(_, v gjson.Result) bool {

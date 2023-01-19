@@ -1,0 +1,15 @@
+Server:
+  RunMode: release
+  HttpPort: 16214     # 端口
+  ReadTimeout: 30
+  WriteTimeout: 30
+Log:
+  Path: ./logs
+  FilePrefix: tvh
+  Encoder: json
+  Output: file        # both/file/console
+  LumberJack:
+    MaxSize: 1        # 在进行切割之前，日志文件的最大大小（以MB为单位）
+    MaxBackups: 30    # 保留旧文件的最大个数
+    MaxAge: 7         # 保留旧文件的最大天数
+    Compress: true    # 是否压缩/归档旧文件

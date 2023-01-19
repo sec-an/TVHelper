@@ -21,11 +21,7 @@ import (
 var dir string
 
 func init() {
-	err := setupSetting()
-	if err != nil {
-		log.Fatalf("init.setupSetting err: %v", err)
-	}
-	logging.Init()
+	// 切换工作目录
 	currDir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
@@ -36,6 +32,11 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = setupSetting()
+	if err != nil {
+		log.Fatalf("init.setupSetting err: %v", err)
+	}
+	logging.Init()
 	global.DouBanClient = douban.NewReqClient(global.SpiderSetting.DouBanClientTimeout)
 	global.ParserClient = parser.NewReqClient(global.SpiderSetting.ParserClientTimeout)
 }

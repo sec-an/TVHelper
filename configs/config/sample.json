@@ -53,6 +53,7 @@
   "lives": [
     {
       "name": "直播",
+      // txt为0，json为1(仅影视支持json)
       "type": 1,
       // 可以在live文件夹中添加本地直播文件
       // 格式为：http://你的ip:16214/live/文件名.后缀
@@ -60,7 +61,7 @@
       "url": "https://gh-proxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/live.json",
       "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={epg}&date={date}",
       "logo": "http://epg.51zmt.top:8000/{logo}",
-      // 是否自动开启
+      // 是否自动开启(仅影视支持)
       "boot": true,
       // 播放器，1：IJK，2：EXO
       "playerType": 1

@@ -11,8 +11,8 @@
 
 {
   "subscribe": [{
-//      "url": "https://hutool.ml/tang",
-      "url": "http://刚刚.live/猫",
+      "url": "https://hutool.ml/tang",
+//      "url": "http://刚刚.live/猫",
       "multi-jar": false
   }],
   "lives": [],

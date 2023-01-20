@@ -11,7 +11,7 @@ import (
 )
 
 type Live struct {
-	Type       int       `json:"type,omitempty"`
+	Type       int       `json:"type"`
 	Boot       bool      `json:"boot,omitempty"`
 	Name       string    `json:"name,omitempty"`
 	Group      string    `json:"group,omitempty"`
@@ -29,7 +29,7 @@ func (l *Live) UnmarshalJSON(data []byte) error {
 	type TempLive Live
 	lr := struct {
 		*TempLive
-		Type       interface{} `json:"type,omitempty"`
+		Type       interface{} `json:"type"`
 		PlayerType interface{} `json:"playerType,omitempty"`
 		Boot       interface{} `json:"boot,omitempty"`
 	}{

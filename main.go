@@ -102,6 +102,7 @@ func setupSetting() error {
 	global.ServerSetting.ReadTimeout *= time.Second
 	global.ServerSetting.WriteTimeout *= time.Second
 	global.RedisSetting.IdleTimeout *= time.Second
+	global.RedisSetting.SubCacheTime *= time.Minute
 	global.SpiderSetting.DouBanClientTimeout *= time.Millisecond
 	global.SpiderSetting.ParserClientTimeout *= time.Millisecond
 	return nil

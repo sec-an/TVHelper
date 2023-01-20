@@ -30,13 +30,14 @@ type SpiderSettingS struct {
 }
 
 type RedisSettingS struct {
-	Running     bool
-	Host        string
-	Port        uint16
-	Auth        string
-	Database    int
-	IdleTimeout time.Duration
-	PoolSize    int
+	Running      bool
+	Host         string
+	Port         uint16
+	Auth         string
+	Database     int
+	IdleTimeout  time.Duration
+	PoolSize     int
+	SubCacheTime time.Duration
 }
 
 func (s *Setting) ReadSection(k string, v interface{}) error {

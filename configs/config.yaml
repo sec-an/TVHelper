@@ -11,6 +11,7 @@ Redis:
   Database: 0
   IdleTimeout: 5    # 秒
   PoolSize: 100
+  SubCacheTime: 15  # 分钟，订阅缓存时间
 Log:
   Path: ./logs
   FilePrefix: tvh

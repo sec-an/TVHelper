@@ -86,7 +86,6 @@ func douBanHandler(c *gin.Context) {
 			_ = global.RedisClient.Set(c, "real_time_hotest", data, 30*time.Minute).Err()
 		} else if err != nil {
 			global.Logger.Error("subjectRealTimeHotest", zap.Error(err))
-			panic(err)
 		} else {
 			_ = json.Unmarshal([]byte(realTimeHotestStr), &subjectRealTimeHotest)
 		}

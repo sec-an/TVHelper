@@ -1,9 +1,20 @@
 # 影视助手
+
+## `v1.0.0` -> `v1.1.1` 升级说明
+
+- 可以使用一键脚本更新
+- `v1.0.0`项目结构不够规范，`v1.1.1`进行了规范化
+- 如果已经安装了`v1.0.0`版本，请将项目根目录下的`config`、`live`、`source_config`目录移至`configs`目录下
+- `configs/config.yaml`可修改TVHelper启动端口、启用Redis进行缓存等
+- 项目运行日志默认会存储在`logs`目录下，请确保TVHelper对该目录具有写权限
+
 ## 痛点
+
 - 使用在线配置，不方便对配置进行个性化修改
 - 在线配置缓存至本地，担心更新不及时
 
 ## 功能（详见`configs/config/sample.json`）
+
 - 极高的自定义程度
 - 多源整合、处理（在线缝合）
   - `http://你的IP:16214/config/sample`
@@ -21,20 +32,29 @@
 - ...
 
 ## 一键脚本
+
 ### 安装
+
 ```shell
 curl -fsSL "https://gh-proxy.com/https://raw.githubusercontent.com/sec-an/TVHelper/main/v1.sh" | bash -s install
 ```
+
 ### 更新
+
 ```shell
 curl -fsSL "https://gh-proxy.com/https://raw.githubusercontent.com/sec-an/TVHelper/main/v1.sh" | bash -s update
 ```
+
 ### 卸载
+
 ```shell
 curl -fsSL "https://gh-proxy.com/https://raw.githubusercontent.com/sec-an/TVHelper/main/v1.sh" | bash -s uninstall
 ```
+
 ### 自定义路径
+
 默认安装在`/opt/TVHelper`中，自定义安装路径，将安装路径作为第二个参数添加，必须是绝对路径（如果路径以`TVHelper`结尾，则直接安装到给定路径，否则会安装在给定路径`TVHelper`目录下），如安装到`/root`：
+
 ```shell
 # Install
 curl -fsSL "https://gh-proxy.com/https://raw.githubusercontent.com/sec-an/TVHelper/main/v1.sh" | bash -s install /root
@@ -43,15 +63,20 @@ curl -fsSL "https://gh-proxy.com/https://raw.githubusercontent.com/sec-an/TVHelp
 # Uninstall
 curl -fsSL "https://gh-proxy.com/https://raw.githubusercontent.com/sec-an/TVHelper/main/v1.sh" | bash -s uninstall /root
 ```
+
 - 启动：`systemctl start TVHelper`
 - 关闭：`systemctl stop TVHelper`
 - 状态：`systemctl status TVHelper`
 - 重启：`systemctl restart TVHelper`
 
 ## 手动安装
+
 ### 获取TVHelper
+
 打开[TVHelper Release](https://github.com/sec-an/TVHelper/releases)下载待部署系统对应的文件。
+
 ### 运行
+
 ```shell
 # 解压下载的文件，得到可执行文件：
 tar -zxvf TVHelper_*.tar.gz
@@ -60,8 +85,10 @@ chmod +x TVHelper
 # 运行程序
 ./TVHelper
 ```
-### 守护进程（Linux）
+### 守护进程（Linux systemd）
+
 使用任意方式编辑`/usr/lib/systemd/system/TVHelper.service`并添加如下内容，其中`path_TVHelper`为`TVHelper`所在的路径
+
 ```bash
 [Unit]
 Description=TVHelper service
@@ -78,6 +105,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 ```
+
 然后，执行`systemctl daemon-reload`重载配置，现在你可以使用这些命令来管理程序：
 - 启动：`systemctl start TVHelper`
 - 关闭：`systemctl stop TVHelper`
@@ -85,6 +113,43 @@ WantedBy=multi-user.target
 - 取消开机自启：`systemctl disable TVHelper`
 - 状态：`systemctl status TVHelper`
 - 重启：`systemctl restart TVHelper`
+
+### 守护进程（OpenWrt等 procd）
+
+使用任意方式编辑`/etc/init.d/TVHelper`并添加如下内容，其中`PROG`为`TVHelper`所在的路径
+
+```bash
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=98
+
+USE_PROCD=1
+
+DAEMON=TVHelper
+PROG=/opt/TVHelper
+
+start_service() {
+    procd_open_instance TVHelper
+    procd_set_param command $PROG/$DAEMON -d $PROG
+    procd_set_param respawn
+    procd_close_instance
+    echo "service TVHelper start"
+}
+
+stop_service() {
+    killall $DAEMON
+    echo "service TVHelper stop"
+}
+```
+
+然后，你可以使用这些命令来管理程序：
+- 启动：`/etc/init.d/TVHelper start`
+- 关闭：`/etc/init.d/TVHelper stop`
+- 配置开机自启：`/etc/init.d/TVHelper enable`
+- 取消开机自启：`/etc/init.d/TVHelper disable`
+- 状态：`/etc/init.d/TVHelper status`
+
 ## 如何更新
 在[TVHelper Release](https://github.com/sec-an/TVHelper/releases)下载新版TVHelper，替换之前的版本即可。
 
@@ -149,6 +214,7 @@ WantedBy=multi-user.target
   "lives": [
     {
       "name": "直播",
+      // txt为0，json为1(仅影视支持json)
       "type": 1,
       // 可以在live文件夹中添加本地直播文件
       // 格式为：http://你的ip:16214/live/文件名.后缀
@@ -156,7 +222,7 @@ WantedBy=multi-user.target
       "url": "https://gh-proxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/live.json",
       "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={epg}&date={date}",
       "logo": "http://epg.51zmt.top:8000/{logo}",
-      // 是否自动开启
+      // 是否自动开启(仅影视支持)
       "boot": true,
       // 播放器，1：IJK，2：EXO
       "playerType": 1

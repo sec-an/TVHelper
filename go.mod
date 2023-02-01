@@ -4,8 +4,10 @@ go 1.19
 
 require (
 	github.com/DisposaBoy/JsonConfigReader v0.0.0-20201129172854-99cf318d67e7
+	github.com/dustin/go-humanize v1.0.1
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/imroc/req/v3 v3.29.0
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/viper v1.14.0

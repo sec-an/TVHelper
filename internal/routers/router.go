@@ -4,6 +4,7 @@ import (
 	"TVHelper/global"
 	"TVHelper/internal/middleware/zaplog"
 	"TVHelper/internal/parser"
+	"TVHelper/internal/vod"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +23,12 @@ func NewRouter() *gin.Engine {
 		})
 	}
 
-	r.GET("/vod", douBanHandler) // for t4 public
+	v := r.Group("/vod")
+	{
+		v.GET("/", douBanHandler) // for t4 public
+		v.GET("/detail", vod.GetDetailContent)
+		v.GET("/play", vod.GetPlayContent)
+	}
 	r.GET("/home", douBanHandler)
 
 	r.GET("/live/:file", func(c *gin.Context) {

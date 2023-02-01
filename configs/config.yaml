@@ -3,6 +3,13 @@ Server:
   HttpPort: 16214     # 端口
   ReadTimeout: 30
   WriteTimeout: 30
+Mysql:  # 正常使用无需开启
+  Running: false
+  Host: 127.0.0.1
+  Port: 3306
+  Username: user
+  Password: passwd
+  Database: db
 Redis:
   Running: false
   Host: 127.0.0.1
@@ -24,4 +31,8 @@ Log:
     Compress: true    # 是否压缩/归档旧文件
 Spider:
   DouBanClientTimeout: 5000 # 毫秒
+  AListClientTimeout: 5000 # 毫秒
   ParserClientTimeout: 5000 # 毫秒
+AList:  # 正常使用无需开启
+  Host: 127.0.0.1
+  Token: token

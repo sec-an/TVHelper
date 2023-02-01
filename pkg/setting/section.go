@@ -26,7 +26,17 @@ type LumberJack struct {
 
 type SpiderSettingS struct {
 	DouBanClientTimeout time.Duration
+	AListClientTimeout  time.Duration
 	ParserClientTimeout time.Duration
+}
+
+type MysqlSettingS struct {
+	Running  bool
+	Host     string
+	Port     uint16
+	Username string
+	Password string
+	Database string
 }
 
 type RedisSettingS struct {
@@ -38,6 +48,11 @@ type RedisSettingS struct {
 	IdleTimeout  time.Duration
 	PoolSize     int
 	SubCacheTime time.Duration
+}
+
+type AListSettingS struct {
+	Host  string
+	Token string
 }
 
 func (s *Setting) ReadSection(k string, v interface{}) error {

@@ -5,7 +5,9 @@ import (
 	"TVHelper/internal/douban"
 	"TVHelper/internal/parser"
 	"TVHelper/internal/routers"
+	"TVHelper/internal/vod"
 	"TVHelper/pkg/logging"
+	"TVHelper/pkg/mysql"
 	"TVHelper/pkg/redis"
 	"TVHelper/pkg/setting"
 	"context"
@@ -43,6 +45,9 @@ func init() {
 	// zap初始化
 	logging.Init()
 	// redis初始化
+	if global.MysqlSetting.Running {
+		global.Mysql = mysql.InitDB()
+	}
 	if global.RedisSetting.Running {
 		global.RedisClient = redis.Init()
 		// 每次运行先清空缓存
@@ -55,6 +60,7 @@ func init() {
 	}
 	// 豆瓣、配置解析客户端初始化
 	global.DouBanClient = douban.NewReqClient(global.SpiderSetting.DouBanClientTimeout)
+	global.AListClient = vod.NewReqClient(global.SpiderSetting.AListClientTimeout)
 	global.ParserClient = parser.NewReqClient(global.SpiderSetting.ParserClientTimeout)
 }
 
@@ -90,11 +96,19 @@ func setupSetting() error {
 	if err != nil {
 		return err
 	}
+	err = newSetting.ReadSection("Mysql", &global.MysqlSetting)
+	if err != nil {
+		return err
+	}
 	err = newSetting.ReadSection("Redis", &global.RedisSetting)
 	if err != nil {
 		return err
 	}
 	err = newSetting.ReadSection("Spider", &global.SpiderSetting)
+	if err != nil {
+		return err
+	}
+	err = newSetting.ReadSection("AList", &global.AListSetting)
 	if err != nil {
 		return err
 	}
@@ -104,6 +118,7 @@ func setupSetting() error {
 	global.RedisSetting.IdleTimeout *= time.Second
 	global.RedisSetting.SubCacheTime *= time.Minute
 	global.SpiderSetting.DouBanClientTimeout *= time.Millisecond
+	global.SpiderSetting.AListClientTimeout *= time.Millisecond
 	global.SpiderSetting.ParserClientTimeout *= time.Millisecond
 	return nil
 }

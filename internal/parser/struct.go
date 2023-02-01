@@ -12,23 +12,25 @@ import (
 )
 
 type Parser struct {
-	Subscribe      []Subscribe    `json:"subscribe,omitempty"`
-	MixAds         []string       `json:"mix-ads,omitempty"`
-	MixFlags       []string       `json:"mix-flags,omitempty"`
-	MixParses      []common.Parse `json:"mix-parses,omitempty"`
-	SitesBlacklist []string       `json:"sites-blacklist,omitempty"`
-	SitesAppend    []common.Site  `json:"sites-append,omitempty"`
-	SitesPrepend   []common.Site  `json:"sites-prepend,omitempty"`
-	Lives          []common.Live  `json:"lives,omitempty"`
-	Spider         string         `json:"spider,omitempty"`
-	Wallpaper      string         `json:"wallpaper,omitempty"`
+	Subscribe    []Subscribe    `json:"subscribe,omitempty"`
+	MixAds       []string       `json:"mix-ads,omitempty"`
+	MixFlags     []string       `json:"mix-flags,omitempty"`
+	MixParses    []common.Parse `json:"mix-parses,omitempty"`
+	SitesAppend  []common.Site  `json:"sites-append,omitempty"`
+	SitesPrepend []common.Site  `json:"sites-prepend,omitempty"`
+	Lives        []common.Live  `json:"lives,omitempty"`
+	Spider       string         `json:"spider,omitempty"`
+	Wallpaper    string         `json:"wallpaper,omitempty"`
 }
 
 type Subscribe struct {
-	Url      string `json:"url,omitempty"`
-	MultiJar bool   `json:"multi-jar,omitempty"`
-	Jar      string `json:"jar,omitempty"`
-	AlwaysOn bool   `json:"always-on,omitempty"`
+	Url            string   `json:"url,omitempty"`
+	MultiJar       bool     `json:"multi-jar,omitempty"`
+	Jar            string   `json:"jar,omitempty"`
+	AlwaysOn       bool     `json:"always-on,omitempty"`
+	SitesPrefix    string   `json:"sites-prefix,omitempty"`
+	SitesWhitelist []string `json:"sites-whitelist,omitempty"`
+	SitesBlacklist []string `json:"sites-blacklist,omitempty"`
 }
 
 func (s *Subscribe) UnmarshalJSON(data []byte) error {

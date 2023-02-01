@@ -90,10 +90,13 @@ func getScribe(parser Parser) (subscribe common.Config) {
 			//if len(subscribe.Sites) == 0 {
 			//	isMultiJar = false
 			//}
-			if isMultiJar {
+			// 判断是否需要修改订阅站点：是否多jar、自定义点播源前缀、点播源白名单、黑名单
+			sitesNeedModify := isMultiJar || itemSubscribe.SitesPrefix != "" || len(itemSubscribe.SitesWhitelist) != 0 || len(itemSubscribe.SitesBlacklist) != 0
+			if sitesNeedModify {
+				sitesFinal := make([]common.Site, 0, len(subscribe.Sites))
 				for iy, itemSite := range tmpSubscribe.Sites {
 					// 该点播源未配置多jar
-					if itemSite.Jar == "" {
+					if isMultiJar && itemSite.Jar == "" {
 						if itemSubscribe.Jar != "" {
 							// 配置文件中指定了该订阅的jar
 							tmpSubscribe.Sites[iy].Jar = itemSubscribe.Jar
@@ -102,7 +105,23 @@ func getScribe(parser Parser) (subscribe common.Config) {
 							tmpSubscribe.Sites[iy].Jar = tmpSubscribe.Spider
 						}
 					}
+					if itemSubscribe.SitesPrefix != "" {
+						tmpSubscribe.Sites[iy].Name = strings.Join([]string{itemSubscribe.SitesPrefix, itemSite.Name}, "")
+					}
+					// 白名单非空且存在，添加点播源且忽略黑名单
+					if len(itemSubscribe.SitesWhitelist) != 0 {
+						if find(itemSubscribe.SitesWhitelist, itemSite.Key) {
+							sitesFinal = append(sitesFinal, tmpSubscribe.Sites[iy])
+						}
+					} else if len(itemSubscribe.SitesBlacklist) != 0 {
+						if !find(itemSubscribe.SitesBlacklist, itemSite.Key) {
+							sitesFinal = append(sitesFinal, tmpSubscribe.Sites[iy])
+						}
+					} else {
+						sitesFinal = append(sitesFinal, tmpSubscribe.Sites[iy])
+					}
 				}
+				tmpSubscribe.Sites = sitesFinal
 			}
 			if len(subscribe.Sites) == 0 {
 				// 第一个有效订阅
@@ -134,15 +153,5 @@ func getScribe(parser Parser) (subscribe common.Config) {
 	subscribe.Parses = duplicateRemoving(append(subscribe.Parses, parser.MixParses...))
 	subscribe.Sites = append(parser.SitesPrepend, subscribe.Sites...)
 	subscribe.Sites = duplicateRemoving(append(subscribe.Sites, parser.SitesAppend...))
-	// 点播源黑名单，性能有待优化
-	if len(parser.SitesBlacklist) != 0 {
-		sitesFinal := make([]common.Site, 0, len(subscribe.Sites))
-		for _, value := range subscribe.Sites {
-			if !find(parser.SitesBlacklist, value.Name) {
-				sitesFinal = append(sitesFinal, value)
-			}
-		}
-		subscribe.Sites = sitesFinal
-	}
 	return
 }

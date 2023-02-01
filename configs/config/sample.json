@@ -21,7 +21,19 @@
       "url": "https://hutool.ml/tang",
       // multi-jar为false时，将采用第一个订阅地址中的spider或者本配置文件中新的spider
       "multi-jar": false,
-      "always-on": false
+      "always-on": false,
+      // 点播源名称前缀自定义
+      // 示例为在该订阅所有点播源的名称前添加"长老_"
+      // 如果不需要，则改为："sites-prefix": ""
+      "sites-prefix": "长老_",
+      // 点播白名单，仅当Key(key)在该列表中的点播源将被添加到最终配置
+      // 示例在下一订阅
+      // 如果不需要，则改为："sites-whitelist": []
+      "sites-whitelist": [],
+      // 点播黑名单，Key(key)在该列表中的点播源将被移除，仅当未配置白名单时生效
+      // 示例为移除Key为"Bili"点播源
+      // 如果不需要，则改为："sites-blacklist": []
+      "sites-blacklist": ["Bili"]
     },
     {
       "url": "http://饭太硬.ga/x/o.json",
@@ -30,7 +42,19 @@
       // 将同一设置多jar为本订阅的spider
       "multi-jar": true,
       // 若always-on为false，且该订阅地址之前存在有效订阅，则不展示该订阅
-      "always-on": false
+      "always-on": false,
+      // 点播源名称前缀自定义
+      // 示例为在该订阅所有点播源的名称前添加"饭太硬$"
+      // 如果不需要，则改为："sites-prefix": ""
+      "sites-prefix": "饭太硬$",
+      // 点播白名单，仅当Key(key)在该列表中的点播源将被添加到最终配置
+      // 示例为仅选取饭太硬订阅中key为"csp_Alist1"和"csp_Alist2"的点播源
+      // 如果不需要，则改为："sites-whitelist": []
+      "sites-whitelist": ["csp_Alist1", "csp_Alist2"],
+      // 点播黑名单，Key(key)在该列表中的点播源将被移除，仅当未配置白名单时生效
+      // 示例为移除Key为"js豆瓣"点播源，由于当前订阅配置了白名单，该黑名单不会生效
+      // 如果不需要，则改为："sites-blacklist": []
+      "sites-blacklist": ["js豆瓣"]
     },
     {
       // 本地配置文件放置在source_config目录中，且需要在该目录下新建子文件夹
@@ -44,7 +68,10 @@
       // 本配置地址为：http://你的ip:16214/config/src/新建的文件夹名/文件名.后缀
       "jar": "http://127.0.0.1:16214/config/src/demo/custom_spider.jar;md5;a84fef826cb82da525469e8acf1e7d9a",
       // 若always-on为true，无论是否已存在有效订阅，都将展示该订阅
-      "always-on": true
+      "always-on": true,
+      "sites-prefix": "",
+      "sites-whitelist": [],
+      "sites-blacklist": []
     }
   ],
 
@@ -67,11 +94,6 @@
       "playerType": 1
     }
   ],
-
-  // 点播黑名单，名称(name)在该列表中的点播源将被移除
-  // 示例为移除”哔哩“点播源
-  // 如果不需要替换，则改为："sites-blacklist": []
-  "sites-blacklist": ["哔哩"],
 
   // 点播源，数组合并至订阅配置sites数组 前
   // 如果不需要增加，则改为："sites-prepend": []

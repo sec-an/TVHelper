@@ -12,12 +12,20 @@
 {
   "subscribe": [{
       "url": "https://hutool.ml/tang",
-//      "url": "http://刚刚.live/猫",
-      "multi-jar": false
+      "multi-jar": false,
+      "sites-prefix": "长老_",
+      "sites-whitelist": [],
+      "sites-blacklist": []
   }],
   "lives": [],
-  "sites-blacklist": [],
-  "sites-prepend": [],
+  "sites-prepend": [{
+      "key": "T4-douban",
+      "name": "豆瓣主页",
+      "type": 4,
+      "api": "https://t4.secan.icu/vod",
+      "searchable": 0,
+      "filterable": 1
+  }],
   "sites-append": [],
   "spider": "",
   "wallpaper": "",

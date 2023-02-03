@@ -2,6 +2,7 @@ package routers
 
 import (
 	"TVHelper/global"
+	"TVHelper/internal/live"
 	"TVHelper/internal/middleware/zaplog"
 	"TVHelper/internal/parser"
 	"TVHelper/internal/vod"
@@ -31,10 +32,14 @@ func NewRouter() *gin.Engine {
 	}
 	r.GET("/home", douBanHandler)
 
-	r.GET("/live/:file", func(c *gin.Context) {
-		file := c.Param("file")
-		c.File("configs/live/" + file)
-	})
+	l := r.Group("/live")
+	{
+		l.GET("/bestv/:channel/:bitrate/mnf.m3u8", live.BesTvHandler)
+		l.GET("/:file", func(c *gin.Context) {
+			file := c.Param("file")
+			c.File("configs/live/" + file)
+		})
+	}
 
 	return r
 }

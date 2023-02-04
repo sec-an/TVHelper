@@ -155,3 +155,21 @@ func getScribe(parser Parser) (subscribe common.Config) {
 	subscribe.Sites = duplicateRemoving(append(subscribe.Sites, parser.SitesAppend...))
 	return
 }
+
+func Decoder(c *gin.Context) {
+	url := c.DefaultQuery("url", "")
+	if url == "" {
+		c.PureJSON(200, gin.H{
+			"error": "请检查url准确性",
+		})
+		return
+	}
+	data := getJson(url)
+	if data == "" {
+		c.PureJSON(200, gin.H{
+			"error": "未解析到配置",
+		})
+		return
+	}
+	c.String(200, data)
+}

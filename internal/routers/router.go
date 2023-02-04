@@ -24,6 +24,8 @@ func NewRouter() *gin.Engine {
 		})
 	}
 
+	r.GET("/parser", parser.Decoder)
+
 	v := r.Group("/vod")
 	{
 		v.GET("/", douBanHandler) // for t4 public

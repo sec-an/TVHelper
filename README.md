@@ -294,7 +294,7 @@ stop_service() {
       "searchable": 1,
       "filterable": 0,
       // 换源，0：关闭，1：开启
-      "switchable": 1,
+      "changeable": 1,
       // 播放器，1：IJK，2：EXO
       "playerType": 2,
       "ext": "http://我不是.肥猫.love:63/token.php"

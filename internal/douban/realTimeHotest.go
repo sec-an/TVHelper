@@ -23,7 +23,7 @@ func SubjectRealTimeHotest() (subjectRealTimeHotest []common.Vod, err error) {
 		subjectRealTimeHotest = append(subjectRealTimeHotest, common.Vod{
 			VodId:      "",
 			VodName:    GJsonGetDefault(v.Get("title"), "暂不支持展示"),
-			VodPic:     v.Get("pic.normal").String(),
+			VodPic:     strings.Join([]string{v.Get("pic.normal").String(), "@User-Agent=com.douban.frodo"}, ""),
 			VodRemarks: strings.TrimSpace(strings.Join([]string{rating, honorInfos}, " ")),
 		})
 		return true

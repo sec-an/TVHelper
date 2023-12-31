@@ -128,8 +128,9 @@ func CateFilter(cateType, ext, pg, douban string) (cateFilterResult common.Resul
 			lists = append(lists, common.Vod{
 				VodId: strings.Join([]string{"msearch:", itemType, "__", v.Get("id").String()},
 					""),
-				VodName:    GJsonGetDefault(v.Get("title"), "暂不支持展示"),
-				VodPic:     strings.Join([]string{v.Get("pic.normal").String(), "@User-Agent=com.douban.frodo"}, ""),
+				VodName: GJsonGetDefault(v.Get("title"), "暂不支持展示"),
+				//VodPic:     strings.Join([]string{v.Get("pic.normal").String(), "@User-Agent=com.douban.frodo"}, ""),
+				VodPic:     v.Get("pic.normal").String(),
 				VodRemarks: strings.TrimSpace(strings.Join([]string{rating, honorInfos}, " ")),
 			})
 		}

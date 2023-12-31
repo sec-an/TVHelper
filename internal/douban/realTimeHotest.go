@@ -21,9 +21,10 @@ func SubjectRealTimeHotest() (subjectRealTimeHotest []common.Vod, err error) {
 		rating := GJsonGetDefault(v.Get("rating.value"), v.Get("null_rating_reason"))
 		honorInfos := GJsonArrayToString(v.Get("honor_infos.#.title"), " | ")
 		subjectRealTimeHotest = append(subjectRealTimeHotest, common.Vod{
-			VodId:      "",
-			VodName:    GJsonGetDefault(v.Get("title"), "暂不支持展示"),
-			VodPic:     strings.Join([]string{v.Get("pic.normal").String(), "@User-Agent=com.douban.frodo"}, ""),
+			VodId:   "",
+			VodName: GJsonGetDefault(v.Get("title"), "暂不支持展示"),
+			//VodPic:     strings.Join([]string{v.Get("pic.normal").String(), "@User-Agent=com.douban.frodo"}, ""),
+			VodPic:     v.Get("pic.normal").String(),
 			VodRemarks: strings.TrimSpace(strings.Join([]string{rating, honorInfos}, " ")),
 		})
 		return true

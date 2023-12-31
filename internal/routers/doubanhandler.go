@@ -91,6 +91,13 @@ func douBanHandler(c *gin.Context) {
 		}
 	} else {
 		subjectRealTimeHotest = getSubjectRealTimeHotest()
+		//subjectRealTimeHotest = append(subjectRealTimeHotest, common.Vod{
+		//	VodId:      "migulive",
+		//	VodName:    "咪咕体育",
+		//	VodPic:     "https://i0.hdslb.com/bfs/face/98cfb17130b9b1f49b658e0f69d6a8574ac0480b.jpg",
+		//	VodRemarks: "直播",
+		//})
+		//subjectRealTimeHotest = append(subjectRealTimeHotest, getSubjectRealTimeHotest()...)
 	}
 	result := common.Result{
 		Class:   douban.GetDbClass(),

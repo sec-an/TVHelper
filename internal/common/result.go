@@ -13,9 +13,23 @@ type Result struct {
 	PageCount int                 `json:"pagecount,omitempty"`
 	Limit     int                 `json:"limit,omitempty"`
 	Total     int                 `json:"total,omitempty"`
-	List      []Vod               `json:"list,omitempty"`
+	Parse     *int                `json:"parse,omitempty"`
+	Code      *int                `json:"code,omitempty"`
+	Jx        *int                `json:"jx,omitempty"`
 	Class     []Class             `json:"class,omitempty"`
+	List      []Vod               `json:"list,omitempty"`
 	Filters   map[string][]Filter `json:"filters,omitempty"`
+	Url       interface{}         `json:"url,omitempty"`
+	Msg       interface{}         `json:"msg,omitempty"`
+	Header    interface{}         `json:"header,omitempty"`
+	PlayUrl   string              `json:"playUrl,omitempty"`
+	JxFrom    string              `json:"jxFrom,omitempty"`
+	Flag      string              `json:"flag,omitempty"`
+	Danmaku   string              `json:"danmaku,omitempty"`
+	Format    string              `json:"format,omitempty"`
+	Click     string              `json:"click,omitempty"`
+	Key       string              `json:"key,omitempty"`
+	Subs      []Sub               `json:"subs,omitempty"`
 }
 
 func (r *Result) UnmarshalJSON(data []byte) error {

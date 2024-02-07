@@ -39,6 +39,7 @@ func getJson(url string) string {
 	}
 	data := buf.String()
 	if !gjson.Valid(data) {
+		data = resp.String()
 		if strings.Contains(data, "**") {
 			data = base64ToString(data)
 		}

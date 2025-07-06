@@ -6,13 +6,10 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"encoding/hex"
-	"io"
 	"regexp"
 	"strings"
 
 	"go.uber.org/zap"
-
-	"github.com/DisposaBoy/JsonConfigReader"
 
 	"github.com/tidwall/gjson"
 )
@@ -30,14 +27,15 @@ func getJson(url string) string {
 		global.Logger.Error(url, zap.Error(err))
 		return ""
 	}
-	dataWithOutComment := JsonConfigReader.New(strings.NewReader(resp.String()))
-	buf := new(strings.Builder)
-	_, err = io.Copy(buf, dataWithOutComment)
-	if err != nil {
-		global.Logger.Error(url+":json注释处理出错", zap.Error(err))
-		return ""
-	}
-	data := buf.String()
+	//dataWithOutComment := JsonConfigReader.New(strings.NewReader(resp.String()))
+	//buf := new(strings.Builder)
+	//_, err = io.Copy(buf, dataWithOutComment)
+	//if err != nil {
+	//	global.Logger.Error(url+":json注释处理出错", zap.Error(err))
+	//	return ""
+	//}
+	//data := buf.String()
+	data := resp.String()
 	if !gjson.Valid(data) {
 		data = resp.String()
 		if strings.Contains(data, "**") {

@@ -18,10 +18,14 @@ import (
 )
 
 func ConfigHandler(c *gin.Context) {
+	folder := c.Param("folder")
 	filename := c.Param("filename")
+	if filename == "/" {
+		filename = ""
+	}
 
 	// 读取配置文件，保存着config目录下
-	configFile, err := os.Open("configs/config/" + filename + ".json")
+	configFile, err := os.Open("configs/config/" + folder + filename + ".json")
 	if err != nil {
 		global.Logger.Error(filename, zap.Error(err))
 		c.PureJSON(404, gin.H{
@@ -51,7 +55,7 @@ func ConfigHandler(c *gin.Context) {
 	var subscribe common.Config
 
 	if global.RedisSetting.Running {
-		keyName := strings.Join([]string{"config", filename}, "_")
+		keyName := strings.Join([]string{"config", folder, filename}, "_")
 		cacheStr, err := global.RedisClient.Get(c, keyName).Result()
 		if err == redis.Nil {
 			global.Logger.Debug(keyName, zap.Error(err))
@@ -78,7 +82,9 @@ func getScribe(parser Parser) (subscribe common.Config) {
 			continue
 		}
 		if data := getJson(itemSubscribe.Url); data != "" {
-			err := json.Unmarshal([]byte(data), tmpSubscribe)
+			subscribeWithOutComment := JsonConfigReader.New(strings.NewReader(data)) // 过滤注释
+			err := json.NewDecoder(subscribeWithOutComment).Decode(&tmpSubscribe)
+			//err := json.Unmarshal([]byte(data), tmpSubscribe)
 			if err != nil {
 				// 订阅失效，更换下一订阅
 				global.Logger.Error(itemSubscribe.Url+":订阅失效", zap.Error(err))
@@ -91,7 +97,7 @@ func getScribe(parser Parser) (subscribe common.Config) {
 			//	isMultiJar = false
 			//}
 			// 判断是否需要修改订阅站点：是否多jar、自定义点播源前缀、点播源白名单、黑名单
-			sitesNeedModify := isMultiJar || itemSubscribe.SitesPrefix != "" || len(itemSubscribe.SitesWhitelist) != 0 || len(itemSubscribe.SitesBlacklist) != 0
+			sitesNeedModify := isMultiJar || itemSubscribe.SitesPrefix != "" || len(itemSubscribe.KeyWhitelist) != 0 || len(itemSubscribe.KeyBlacklist) != 0
 			if sitesNeedModify {
 				sitesFinal := make([]common.Site, 0, len(subscribe.Sites))
 				for iy, itemSite := range tmpSubscribe.Sites {
@@ -109,12 +115,12 @@ func getScribe(parser Parser) (subscribe common.Config) {
 						tmpSubscribe.Sites[iy].Name = strings.Join([]string{itemSubscribe.SitesPrefix, itemSite.Name}, "")
 					}
 					// 白名单非空且存在，添加点播源且忽略黑名单
-					if len(itemSubscribe.SitesWhitelist) != 0 {
-						if find(itemSubscribe.SitesWhitelist, itemSite.Key) {
+					if len(itemSubscribe.KeyWhitelist) != 0 || len(itemSubscribe.NameWhitelist) != 0 {
+						if find(itemSubscribe.KeyWhitelist, itemSite.Key) || contains(itemSubscribe.NameWhitelist, itemSite.Name) {
 							sitesFinal = append(sitesFinal, tmpSubscribe.Sites[iy])
 						}
-					} else if len(itemSubscribe.SitesBlacklist) != 0 {
-						if !find(itemSubscribe.SitesBlacklist, itemSite.Key) {
+					} else if len(itemSubscribe.KeyBlacklist) != 0 || len(itemSubscribe.NameBlacklist) != 0 {
+						if !find(itemSubscribe.KeyBlacklist, itemSite.Key) && !contains(itemSubscribe.NameBlacklist, itemSite.Name) {
 							sitesFinal = append(sitesFinal, tmpSubscribe.Sites[iy])
 						}
 					} else {

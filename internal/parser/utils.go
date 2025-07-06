@@ -1,6 +1,9 @@
 package parser
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func duplicateRemoving[T any](s []T) []T {
 	res := make([]T, 0, len(s))
@@ -18,6 +21,15 @@ func duplicateRemoving[T any](s []T) []T {
 func find(slice []string, val string) bool {
 	for _, item := range slice {
 		if item == val {
+			return true
+		}
+	}
+	return false
+}
+
+func contains(slice []string, val string) bool {
+	for _, item := range slice {
+		if strings.Contains(val, item) {
 			return true
 		}
 	}

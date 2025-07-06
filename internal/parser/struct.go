@@ -24,13 +24,15 @@ type Parser struct {
 }
 
 type Subscribe struct {
-	Url            string   `json:"url,omitempty"`
-	MultiJar       bool     `json:"multi-jar,omitempty"`
-	Jar            string   `json:"jar,omitempty"`
-	AlwaysOn       bool     `json:"always-on,omitempty"`
-	SitesPrefix    string   `json:"sites-prefix,omitempty"`
-	SitesWhitelist []string `json:"sites-whitelist,omitempty"`
-	SitesBlacklist []string `json:"sites-blacklist,omitempty"`
+	Url           string   `json:"url,omitempty"`
+	MultiJar      bool     `json:"multi-jar,omitempty"`
+	Jar           string   `json:"jar,omitempty"`
+	AlwaysOn      bool     `json:"always-on,omitempty"`
+	SitesPrefix   string   `json:"sites-prefix,omitempty"`
+	KeyWhitelist  []string `json:"key-whitelist,omitempty"`
+	KeyBlacklist  []string `json:"key-blacklist,omitempty"`
+	NameWhitelist []string `json:"name-whitelist,omitempty"`
+	NameBlacklist []string `json:"name-blacklist,omitempty"`
 }
 
 func (s *Subscribe) UnmarshalJSON(data []byte) error {

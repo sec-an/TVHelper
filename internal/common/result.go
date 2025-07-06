@@ -25,11 +25,13 @@ type Result struct {
 	PlayUrl   string              `json:"playUrl,omitempty"`
 	JxFrom    string              `json:"jxFrom,omitempty"`
 	Flag      string              `json:"flag,omitempty"`
-	Danmaku   string              `json:"danmaku,omitempty"`
+	Desc      string              `json:"desc,omitempty"`
+	Danmaku   []Danmaku           `json:"danmaku,omitempty"`
 	Format    string              `json:"format,omitempty"`
 	Click     string              `json:"click,omitempty"`
 	Key       string              `json:"key,omitempty"`
 	Subs      []Sub               `json:"subs,omitempty"`
+	Drm       *Drm                `json:"drm,omitempty"`
 }
 
 func (r *Result) UnmarshalJSON(data []byte) error {

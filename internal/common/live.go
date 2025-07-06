@@ -7,11 +7,18 @@ type Live struct {
 	Pass       *bool       `json:"pass,omitempty"`
 	Group      string      `json:"group,omitempty"`
 	Url        string      `json:"url,omitempty"`
+	Api        string      `json:"api,omitempty"`
+	Ext        string      `json:"ext,omitempty"`
+	Jar        string      `json:"jar,omitempty"`
 	Logo       string      `json:"logo,omitempty"`
 	Epg        string      `json:"epg,omitempty"`
 	Ua         string      `json:"ua,omitempty"`
 	Click      string      `json:"click,omitempty"`
+	Origin     string      `json:"origin,omitempty"`
 	Referer    string      `json:"referer,omitempty"`
+	TimeZone   string      `json:"timeZone,omitempty"`
+	Keep       string      `json:"keep,omitempty"`
+	Catchup    *Catchup    `json:"catchup,omitempty"`
 	Timeout    *int        `json:"timeout,omitempty"`
 	Header     interface{} `json:"header,omitempty"`
 	PlayerType *int        `json:"playerType,omitempty"`

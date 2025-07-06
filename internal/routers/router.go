@@ -16,7 +16,7 @@ func NewRouter() *gin.Engine {
 
 	conf := r.Group("/config")
 	{
-		conf.GET("/:filename", parser.ConfigHandler)
+		conf.GET("/:folder/*filename", parser.ConfigHandler)
 		conf.GET("/src/:path/:file", func(c *gin.Context) {
 			path := c.Param("path")
 			file := c.Param("file")

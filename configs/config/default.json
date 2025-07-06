@@ -14,8 +14,10 @@
       "url": "https://hutool.ml/tang",
       "multi-jar": false,
       "sites-prefix": "长老_",
-      "sites-whitelist": [],
-      "sites-blacklist": []
+      "key-whitelist": [],
+      "key-blacklist": [],
+      "name-whitelist": [],
+      "name-blacklist": []
   }],
   "lives": [],
   "sites-prepend": [{

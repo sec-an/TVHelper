@@ -5,6 +5,7 @@ type Core struct {
 	Name   string `json:"name,omitempty"`
 	Pass   string `json:"pass,omitempty"`
 	Broker string `json:"broker,omitempty"`
+	Domain string `json:"domain,omitempty"`
 	Resp   string `json:"resp,omitempty"`
 	Sign   string `json:"sign,omitempty"`
 	Pkg    string `json:"pkg,omitempty"`

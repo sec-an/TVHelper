@@ -28,12 +28,12 @@
       "sites-prefix": "长老_",
       // 点播白名单，仅当Key(key)在该列表中的点播源将被添加到最终配置
       // 示例在下一订阅
-      // 如果不需要，则改为："sites-whitelist": []
-      "sites-whitelist": [],
+      // 如果不需要，则改为："key-whitelist": []
+      "key-whitelist": [],
       // 点播黑名单，Key(key)在该列表中的点播源将被移除，仅当未配置白名单时生效
       // 示例为移除Key为"Bili"点播源
-      // 如果不需要，则改为："sites-blacklist": []
-      "sites-blacklist": ["Bili"]
+      // 如果不需要，则改为："key-blacklist": []
+      "key-blacklist": ["Bili"]
     },
     {
       "url": "http://饭太硬.ga/x/o.json",
@@ -49,12 +49,16 @@
       "sites-prefix": "饭太硬$",
       // 点播白名单，仅当Key(key)在该列表中的点播源将被添加到最终配置
       // 示例为仅选取饭太硬订阅中key为"csp_Alist1"和"csp_Alist2"的点播源
-      // 如果不需要，则改为："sites-whitelist": []
-      "sites-whitelist": ["csp_Alist1", "csp_Alist2"],
+      // 如果不需要，则改为："key-whitelist": []
+      "key-whitelist": ["csp_Alist1", "csp_Alist2"],
       // 点播黑名单，Key(key)在该列表中的点播源将被移除，仅当未配置白名单时生效
       // 示例为移除Key为"js豆瓣"点播源，由于当前订阅配置了白名单，该黑名单不会生效
-      // 如果不需要，则改为："sites-blacklist": []
-      "sites-blacklist": ["js豆瓣"]
+      // 如果不需要，则改为："key-blacklist": []
+      "key-blacklist": ["js豆瓣"],
+      // 包含匹配
+      "name-whitelist": [],
+      // 包含匹配
+      "name-blacklist": []
     },
     {
       // 本地配置文件放置在source_config目录中，且需要在该目录下新建子文件夹
@@ -70,8 +74,10 @@
       // 若always-on为true，无论是否已存在有效订阅，都将展示该订阅
       "always-on": true,
       "sites-prefix": "",
-      "sites-whitelist": [],
-      "sites-blacklist": []
+      "key-whitelist": [],
+      "key-blacklist": [],
+      "name-whitelist": [],
+      "name-blacklist": []
     }
   ],
 

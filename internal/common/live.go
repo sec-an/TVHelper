@@ -8,7 +8,7 @@ type Live struct {
 	Group      string      `json:"group,omitempty"`
 	Url        string      `json:"url,omitempty"`
 	Api        string      `json:"api,omitempty"`
-	Ext        string      `json:"ext,omitempty"`
+	Ext        interface{} `json:"ext,omitempty"`
 	Jar        string      `json:"jar,omitempty"`
 	Logo       string      `json:"logo,omitempty"`
 	Epg        string      `json:"epg,omitempty"`
